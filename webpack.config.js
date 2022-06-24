@@ -1,28 +1,28 @@
-const path = require('path');
-const webpack = require('webpack');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 //  basic configuration, webpack needs three properties: entry, output, and mode
 // entry: root of the bundle and the beginning of the dependency graph
 // output: bundles and outputs entry point to specified folder (BP: 'dist')
 // mode: set up the mode in which the webpack runs (default: production)
 // plugins: tells webpack which plugins to look for on load
+const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+// const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+// const WebpackPwaManifest = require("webpack-pwa-manifest");
+const path = require('path');
 
 const config = {
   entry: {
-    app: "./assets/js/script.js",
-    events: "./assets/js/events.js",
-    schedule: "./assets/js/schedule.js",
-    tickets: "./assets/js/tickets.js"
+    app: './assets/js/script.js',
+    events: './assets/js/events.js',
+    schedule: './assets/js/schedule.js',
+    tickets: './assets/js/tickets.js'
   },
   output: {
-    filename: "[name].bundle.js",
-    path: __dirname + "/dist"
+    path: path.join(__dirname + "/dist"),
+    filename: "[name].bundle.js"
   },
   module: {
     rules: [
       {
-        // regex to process any image with .jpg file extension
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
@@ -30,17 +30,15 @@ const config = {
             options: {
               esModule: false,
               name(file) {
-                return "[path][name].[ext]";
+                return '[path][name].[ext]';
               },
               publicPath(url) {
-                // replaces "../" in require statement with "/assets/"
-                return url.replace("../", "/assets/");  
+                return url.replace('../', '/assets/');
               }
             }
           },
           {
-            // make sure this is defined AFTER file-loader processes the images
-            loader: "image-webpack-loader"
+            loader: 'image-webpack-loader'
           }
         ]
       }
@@ -48,13 +46,26 @@ const config = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"
+      $: 'jquery',
+      jQuery: 'jquery'
     }),
     new BundleAnalyzerPlugin({
-      // the report outputs to an HTML file in the dist folder [report.html]
-      analyzerMode: "static"
+      analyzerMode: 'static'
     })
+    // new WebpackPwaManifest({
+    //   name: "Food Event",
+    //   short_name: "Foodies",
+    //   description: "An app that allows you to view upcoming food events.",
+    //   background_color: "#01579b",
+    //   theme_color: "#ffffff",
+    //   fingerprints: false,
+    //   inject: false,
+    //   icons: [{
+    //     src: path.resolve("assets/img/icons/icon-512x512.png"),
+    //     sizes: [96, 128, 192, 256, 384, 512],
+    //     destination: path.join("assets", "icons")
+    //   }]
+    // })
   ],
   mode: 'development'
 };
