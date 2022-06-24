@@ -6,7 +6,7 @@
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
-// const WebpackPwaManifest = require("webpack-pwa-manifest");
+const WebpackPwaManifest = require("webpack-pwa-manifest");
 const path = require('path');
 
 const config = {
@@ -51,21 +51,31 @@ const config = {
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static'
+    }),
+    new WebpackPwaManifest({
+      // name: appears next to apps icon on desktop
+      name: "Food Event",
+      // shortname: appears on homescreen when downloaded (mobile)
+      short_name: "Foodies",
+      description: "An app that allows you to view upcoming food events.",
+      // specifies homepage for the PWA relative to location of manifest file
+      start_url: "../index.html",
+      // shows up prior to first paint
+      background_color: "#01579b",
+      // toolbar color
+      theme_color: "#ffffff",
+      // fingerprints / inject specific to manifest plugin
+      // fingerprints: specifies whether or not webpack should generate unique fingerprints
+      // each time a new manifest is generated; ex: 'manifest.lhge325d.json'
+      fingerprints: false,
+      // inject: determines whether manifest.json link is added to the HTML
+      inject: false,
+      icons: [{
+        src: path.resolve("assets/img/icons/icon-512x512.png"),
+        sizes: [96, 128, 192, 256, 384, 512],
+        destination: path.join("assets", "icons")
+      }]
     })
-    // new WebpackPwaManifest({
-    //   name: "Food Event",
-    //   short_name: "Foodies",
-    //   description: "An app that allows you to view upcoming food events.",
-    //   background_color: "#01579b",
-    //   theme_color: "#ffffff",
-    //   fingerprints: false,
-    //   inject: false,
-    //   icons: [{
-    //     src: path.resolve("assets/img/icons/icon-512x512.png"),
-    //     sizes: [96, 128, 192, 256, 384, 512],
-    //     destination: path.join("assets", "icons")
-    //   }]
-    // })
   ],
   mode: 'development'
 };
